@@ -23,11 +23,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    # 使用Qt 6.1.0，早期稳定版本
+    # 使用Qt 5.15.2，这是Qt 5的最后一个版本，GitHub Actions支持最好
     - name: Setup Qt
       uses: jurplel/install-qt-action@v3
       with:
-        version: '6.1.0'
+        version: '5.15.2'
         arch: 'x64'
         setup-python: false
         

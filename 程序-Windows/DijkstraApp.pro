@@ -1,6 +1,7 @@
 QT += core widgets concurrent sql
 
-CONFIG += c++17
+# Qt5兼容：使用C++14，Qt6使用C++17
+CONFIG += c++14
 
 # Windows平台配置
 win32 {
