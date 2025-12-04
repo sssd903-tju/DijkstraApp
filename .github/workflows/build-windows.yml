@@ -23,11 +23,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    # 只安装基础Qt，避免模块名称问题
+    # 使用Qt 6.4.0，更稳定的版本
     - name: Setup Qt
       uses: jurplel/install-qt-action@v3
       with:
-        version: '6.5.3'
+        version: '6.4.0'
         arch: 'x64'
         setup-python: false
         
