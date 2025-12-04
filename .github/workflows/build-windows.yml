@@ -23,11 +23,36 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Qt
+    # 先只安装基础Qt，避免模块名称问题
+    - name: Setup Qt Base
       uses: jurplel/install-qt-action@v3
       with:
         version: '6.5.3'
-        modules: 'qtbase qttools qtsvg qtsql'
+        arch: 'x64'
+        setup-python: false
+        
+    # 然后单独安装其他模块
+    - name: Install Qt Tools
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.3'
+        modules: 'qttools'
+        arch: 'x64'
+        setup-python: false
+        
+    - name: Install Qt SVG
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.3'
+        modules: 'qtsvg'
+        arch: 'x64'
+        setup-python: false
+        
+    - name: Install Qt SQL
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.3'
+        modules: 'qtsql'
         arch: 'x64'
         setup-python: false
         
