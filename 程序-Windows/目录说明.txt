@@ -1,0 +1,13 @@
+Windows版本源代码目录
+=====================
+
+本目录包含Windows版本的源代码和编译脚本。
+
+主要文件：
+- package_windows.bat: 在Windows上本地编译
+- package_windows_from_mac.sh: 在Mac上交叉编译Windows版本
+- create_github_actions.sh: 创建GitHub Actions自动编译配置
+
+源代码文件与"程序/"目录中的相同，只是编译脚本不同。
+
+详细说明请查看 README_Windows.md

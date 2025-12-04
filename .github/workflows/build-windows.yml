@@ -1,0 +1,95 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: false
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - debug
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.10.0'
+        modules: 'qtbase qttools qtsvg qtsql'
+        arch: 'x64'
+        
+    - name: Configure project
+      working-directory: 程序-Windows
+      run: |
+        qmake -config release
+        
+    - name: Build application
+      working-directory: 程序-Windows
+      run: |
+        nmake release
+        
+    - name: Find executable
+      working-directory: 程序-Windows
+      id: find_exe
+      shell: cmd
+      run: |
+        if exist "release\DijkstraApp.exe" (
+          echo exe_path=release\DijkstraApp.exe >> %GITHUB_OUTPUT%
+          echo exe_dir=release >> %GITHUB_OUTPUT%
+        ) else (
+          if exist "DijkstraApp.exe" (
+            echo exe_path=DijkstraApp.exe >> %GITHUB_OUTPUT%
+            echo exe_dir=. >> %GITHUB_OUTPUT%
+          ) else (
+            echo exe_path= >> %GITHUB_OUTPUT%
+            echo exe_dir= >> %GITHUB_OUTPUT%
+          )
+        )
+        
+    - name: Deploy Qt dependencies
+      working-directory: 程序-Windows
+      if: steps.find_exe.outputs.exe_path != ''
+      run: |
+        windeployqt ${{ steps.find_exe.outputs.exe_path }} --release --force --compiler-runtime
+        
+    - name: Create release archive
+      working-directory: 程序-Windows
+      if: steps.find_exe.outputs.exe_path != ''
+      shell: powershell
+      run: |
+        $exeDir = "${{ steps.find_exe.outputs.exe_dir }}"
+        if ($exeDir -eq "" -or $exeDir -eq ".") { 
+          Compress-Archive -Path "*" -Exclude "*.obj","*.o","Makefile*","*.pro.user" -DestinationPath "DijkstraApp-Windows.zip" -Force
+        } else {
+          Compress-Archive -Path "$exeDir\*" -DestinationPath "DijkstraApp-Windows.zip" -Force
+        }
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      if: steps.find_exe.outputs.exe_path != ''
+      with:
+        name: DijkstraApp-Windows
+        path: 程序-Windows/DijkstraApp-Windows.zip
+        
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: 程序-Windows/DijkstraApp-Windows.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

@@ -1,0 +1,26 @@
+# 编译输出
+build-release/
+build-windows/
+release/
+debug/
+*.o
+*.obj
+*.exe
+*.app
+Makefile*
+*.pro.user
+*.pro.user.*
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+*.qrc.depends
+
+# Qt Creator
+*.autosave
+
+# 临时文件
+*~
+*.swp
+*.bak
+.DS_Store
+

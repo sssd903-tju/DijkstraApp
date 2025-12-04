@@ -1,0 +1,44 @@
+Windows版本修改记录
+==================
+
+## 已完成的Windows平台适配修改
+
+### 1. 路径处理 (mainwindow.cpp)
+- ✅ 修复硬编码路径分隔符，使用 QDir::separator()
+- ✅ 使用 QStandardPaths::AppDataLocation 获取Windows标准数据目录
+- ✅ Windows数据目录：C:\Users\<用户名>\AppData\Local\DijkstraApp\
+- ✅ 文件对话框默认路径处理优化
+
+### 2. 文件编码 (dijkstra_loader.cpp)
+- ✅ 添加 QStringConverter 头文件
+- ✅ 设置文件读取为UTF-8编码，确保中文路径和内容正确处理
+
+### 3. 项目配置 (DijkstraApp.pro)
+- ✅ 添加Windows平台特定配置
+- ✅ UTF-8编码支持（MSVC和MinGW）
+- ✅ GUI应用配置（无控制台窗口）
+- ✅ 版本信息配置
+
+### 4. 应用程序初始化 (main.cpp)
+- ✅ 添加Windows平台特定设置
+- ✅ 设置应用程序信息（名称、版本、组织）
+- ✅ 控制台支持（Debug模式可选）
+
+### 5. Windows特定头文件 (windows_fixes.h)
+- ✅ 创建Windows平台辅助函数
+- ✅ 控制台UTF-8支持
+- ✅ 路径规范化函数
+
+## 数据库文件位置
+
+Windows: C:\Users\<用户名>\AppData\Local\DijkstraApp\graph.db
+macOS:   ~/Library/Application Support/DijkstraApp/graph.db
+
+## 测试要点
+
+1. ✅ 数据库文件正确创建在AppData目录
+2. ✅ 文件对话框能正确显示中文路径
+3. ✅ 导入/导出功能正常工作
+4. ✅ 所有UI元素正常显示
+5. ✅ 路径中的中文字符正确处理
+
