@@ -3,8 +3,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
-#include <QStringConverter>
 #include <QDebug>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QStringConverter>
+#endif
 
 // ==================== FileLoaderWorker 实现 ====================
 
@@ -28,9 +30,12 @@ void FileLoaderWorker::load()
     qint64 bytesRead = 0;
 
     QTextStream in(&file);
-    // Windows兼容：确保使用UTF-8编码读取文件（Qt6默认就是UTF-8，这里显式设置以确保兼容性）
+    // Windows兼容：确保使用UTF-8编码读取文件
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     in.setEncoding(QStringConverter::Utf8);
+#else
+    // Qt5: 使用setCodec
+    in.setCodec("UTF-8");
 #endif
     int lineNumber = 0;
     int lastProgressLine = 0;
